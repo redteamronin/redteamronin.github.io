@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>Natas0 -> Natas1 - RedTeamRonin</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="generator" content="mkdocs-1.5.2, mkdocs-gitbook-1.0.7">
+
+<link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta rel="next" href="" />
+<link href="../../css/style.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+<div class="book">
+<div class="book-summary">
+
+<nav role="navigation">
+<ul class="summary">
+<li>
+<a href="../.." target="_blank" class="custom-link">RedTeamRonin</a>
+</li>
+<li class="divider"></li>
+<li class="chapter" data-path="">
+<a href="../..">About</a>
+<li class="chapter" data-path="natas/">
+<a href="../">Natas</a>
+<li class="divider"></li>
+
+
+
+<li><a href="http://www.mkdocs.org">
+Published with MkDocs
+</a></li>
+
+<li><a href="https://github.com/GitbookIO/theme-default">
+Theme by GitBook
+</a></li>
+</ul>
+
+</nav>
+
+</div> <!-- end of book-summary -->
+
+<div class="book-body">
+<div class="body-inner">
+<div class="book-header" role="navigation">
+
+<!-- Title -->
+<h1>
+<i class="fa fa-circle-o-notch fa-spin"></i>
+<a href="." ></a>
+</h1>
+
+</div> <!-- end of book-header -->
+
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="page-inner">
+
+<section class="normal markdown-section">
+
+
+
+<h1 id="natas0-natas1">Natas0 -&gt; Natas1</h1>
+<p>We start our journey here <a href="https://overthewire.org/wargames/natas/">Natas - OverTheWire</a></p>
+<p>Keep in mind: <strong>All passwords are also stored in /etc/natas_webpass/</strong></p>
+<p>We'll need to login using the credentials provided to <a href="http://natas0.natas.labs.overthewire.org">Natas0</a></p>
+<p><img alt="Natas0 Login" src="./images/login.png" /></p>
+<p>After our login, we get the following page:</p>
+<p><a href="./images/natas0_web.png">Natas0 - Webpage</a></p>
+<p>The page itself offers a hint as to where we can go to find the path forward.</p>
+<p><em>You can find the password for the next level on this page.</em></p>
+<p>We can achieve what we are looking for in a few ways.</p>
+<h2 id="using-curl">Using cURL:</h2>
+<p>Specifically since natas uses basic authentication, we will need to provide credentials when using cURL, we can do that with the <code>-u</code> flag</p>
+<p><code>curl -u "natas0:natas0" http://natas0.natas.labs.overthewire.org</code></p>
+<h2 id="view-source">View-Source:</h2>
+<p>We can right click the webpage and select <code>View Page Source</code>
+This will open another tab displaying the HTML contents of the webpage.</p>
+<h2 id="developer-tools">Developer Tools:</h2>
+<p>We have a view options here:</p>
+<h3 id="inspector">Inspector</h3>
+<p>We can highligh and expand the HTML tags to narrow down on what we want to look at.</p>
+<p><img alt="Inspector" src="./images/inspector.png" /></p>
+<h3 id="debugger">Debugger</h3>
+<p>We can view the index.html (in this example) to view the contents of the index.html file processed by the browser</p>
+<p><img alt="Debugger" src="./images/debugger.png" /></p>
+<h3 id="network">Network</h3>
+<p>We can view the files that we fetched and processed by our browser (and the status message/method used). We view the Headers, Cookies, Request, Response, and Timings as well.</p>
+<p><img alt="Network" src="./images/network.png" /></p>
+
+
+</section>
+
+</div> <!-- end of page-inner -->
+</div> <!-- end of page-wrapper -->
+
+</div> <!-- end of body-inner -->
+
+</div> <!-- end of book-body -->
+<script src="../../js/main.js"></script>
+<script src="../../js/gitbook.min.js"></script>
+<script src="../../js/theme.min.js"></script>
+</body>
+</html>
