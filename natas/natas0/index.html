@@ -6,7 +6,7 @@
 <title>Natas0 -> Natas1 - RedTeamRonin</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<meta name="generator" content="mkdocs-1.5.2, mkdocs-gitbook-1.0.7">
+<meta name="generator" content="mkdocs-1.5.3, mkdocs-gitbook-1.0.7">
 
 <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
 <meta name="HandheldFriendly" content="true"/>
@@ -31,6 +31,8 @@
 <a href="../..">About</a>
 <li class="chapter" data-path="natas/">
 <a href="../">Natas</a>
+<li class="chapter" data-path="HTB/">
+<a href="../../HTB/">HTB</a>
 <li class="divider"></li>
 
 
@@ -71,9 +73,9 @@ Theme by GitBook
 <p>We start our journey here <a href="https://overthewire.org/wargames/natas/">Natas - OverTheWire</a></p>
 <p>Keep in mind: <strong>All passwords are also stored in /etc/natas_webpass/</strong></p>
 <p>We'll need to login using the credentials provided to <a href="http://natas0.natas.labs.overthewire.org">Natas0</a></p>
-<p><img alt="Natas0 Login" src="../../images/login.png" /></p>
+<p><img alt="Natas0 Login" src="./images/login.png" /></p>
 <p>After our login, we get the following page:</p>
-<p><img alt="Natas0 Webpage" src="../../images/natas0_web.png" /></p>
+<p><img alt="Natas0 Webpage" src="./images/natas0_web.png" /></p>
 <p>The page itself offers a hint as to where we can go to find the path forward.</p>
 <p><em>You can find the password for the next level on this page.</em></p>
 <p>We can achieve what we are looking for in a few ways.</p>
@@ -87,13 +89,13 @@ This will open another tab displaying the HTML contents of the webpage.</p>
 <p>We have a view options here:</p>
 <h3 id="inspector">Inspector</h3>
 <p>We can highligh and expand the HTML tags to narrow down on what we want to look at.</p>
-<p><img alt="Inspector" src="../../images/inspector.png" /></p>
+<p><img alt="Inspector" src="./images/inspector.png" /></p>
 <h3 id="debugger">Debugger</h3>
 <p>We can view the index.html (in this example) to view the contents of the index.html file processed by the browser</p>
-<p><img alt="Debugger" src="../../images/debugger.png" /></p>
+<p><img alt="Debugger" src="./images/debugger.png" /></p>
 <h3 id="network">Network</h3>
 <p>We can view the files that we fetched and processed by our browser (and the status message/method used). We view the Headers, Cookies, Request, Response, and Timings as well.</p>
-<p><img alt="Network" src="../../images/network.png" /></p>
+<p><img alt="Network" src="./images/network.png" /></p>
 
 
 </section>

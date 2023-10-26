@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>The Challenge - RedTeamRonin</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="generator" content="mkdocs-1.5.3, mkdocs-gitbook-1.0.7">
+
+<link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta rel="next" href="" />
+<link href="../../css/style.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+<div class="book">
+<div class="book-summary">
+
+<nav role="navigation">
+<ul class="summary">
+<li>
+<a href="../.." target="_blank" class="custom-link">RedTeamRonin</a>
+</li>
+<li class="divider"></li>
+<li class="chapter" data-path="">
+<a href="../..">About</a>
+<li class="chapter" data-path="natas/">
+<a href="../../natas/">Natas</a>
+<li class="chapter" data-path="HTB/">
+<a href="../">HTB</a>
+<li class="divider"></li>
+
+
+
+<li><a href="http://www.mkdocs.org">
+Published with MkDocs
+</a></li>
+
+<li><a href="https://github.com/GitbookIO/theme-default">
+Theme by GitBook
+</a></li>
+</ul>
+
+</nav>
+
+</div> <!-- end of book-summary -->
+
+<div class="book-body">
+<div class="body-inner">
+<div class="book-header" role="navigation">
+
+<!-- Title -->
+<h1>
+<i class="fa fa-circle-o-notch fa-spin"></i>
+<a href="." ></a>
+</h1>
+
+</div> <!-- end of book-header -->
+
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="page-inner">
+
+<section class="normal markdown-section">
+
+
+
+<h1 id="the-challenge">The Challenge</h1>
+<p><img alt="Pinned - HTB" src="../../images/Pinned_HTB.png" /></p>
+<p>Description:
+<em>This app has stored my credentials and I can only login automatically. I tried to intercept the login request and restore my password, but this seems to be a secure connection. Can you help bypass this security restriction and intercept the password in plaintext?</em></p>
+<p>Downloading the zip file, we are presented with an apk and a note.</p>
+<p><em>1. Install this application in an API Level 29 or earlier (i.e. Android 10.0 (Google APIs)).</em></p>
+<h2 id="the-setup">The Setup</h2>
+<p>This is what I used. I'm sure there are more than a singular path to get to the destination (the flag).</p>
+<p>VirtualBox:
+- Kali VM - This is where we are running our Android Dev tools, Frida, Burp Suite, jadx-gui, etc
+- Android 9 VM - This is the host we are going to use to install the apk and run the application</p>
+<h3 id="kali-vm">Kali VM:</h3>
+<p>Straight out of the box from OffSec, things should be good with a few of these additions:</p>
+<ul>
+<li><code>sudo apt install jadx</code> - used to decompile apk files and more
+    <a href="https://github.com/skylot/jadx#jadx">JADX - GitHub</a></li>
+<li><code>sudo apt install adb</code> - used to communicate with our Android device</li>
+<li><code>sudo apt install python3-venv</code> - used to create a virtual environment for frida
+Frida - Installation:</li>
+<li><code>sudo mkdir /opt/frida-on-venv</code></li>
+<li><code>cd /opt/frida-on-venv</code></li>
+<li><code>sudo python3 -m venv frida</code></li>
+<li><code>source frida/bin/activate</code></li>
+<li><code>sudo pip3 install frida-tools</code></li>
+</ul>
+<p>Burp Suite - Community Edition is fine, start it up and add a new Proxy Listener on the Kali VM IP so we can use it on the Android VM later.</p>
+<h3 id="android-vm">Android VM:</h3>
+<p>Here is what I found regarding getting an Android VM up and running on VirtualBox:</p>
+<ul>
+<li><a href="https://www.android-x86.org/documentation/virtualbox.html">Android-x86 - VirtualBox</a></li>
+<li><a href="https://www.android-x86.org/download">Android-x86 ISO - Download</a></li>
+</ul>
+<p>VirtualBox settings:</p>
+<ul>
+<li>New Linux machine - Linux 2.6 / 3.x / 4.x - also matching your architecture.</li>
+<li>RAM - Ideally 2GB</li>
+<li>Hard Drive - 8 GB</li>
+</ul>
+<p>Further system settings, after initial setup:</p>
+<ul>
+<li>Processor - 1</li>
+<li>Display - VBoxVGA</li>
+<li>Storage - <a href="https://www.android-x86.org/download">Android-x86 ISO</a></li>
+</ul>
+<p>For the installation of the Android OS, I ran the auto_installation from the advanced options.</p>
+<p><img alt="Advanced Options" src="../../images/Android_Install_Advanced_Options.png" />
+<img alt="Auto Installation" src="../../images/Android_Install_Auto_Installation.png" /></p>
+<p>Post OS installation, I set up the proxy in the Android Settings.</p>
+<p>Finally, I recommend setting the network settings of both the Kali VM and the Android VM to the Bridged Adapter. This way, I could run Burp Suite on the Kali VM and use <code>adb</code> to connect to the Android VM IP address later.</p>
+<h3 id="putting-things-in-motion">Putting things in motion:</h3>
+<p>I installed the Pinned.apk via <code>adb</code>:
+- <code>adb connect &lt;ip&gt;</code>
+- <code>adb install ./pinned.apk</code></p>
+<p>I opened the application and found a login page:</p>
+<p><img alt="Pinnned Login" src="../../images/Pinned_Login.png" /></p>
+<p>From there, I set up Burp Suite Communicty on the Kali VM to capture the traffic from the Android VM. I hit the login button on the Pinned application. The only change in the UI was a message below the button of "You are logged in."</p>
+<p>I did also notice this error in Burp Suite:</p>
+<p><img alt="Burp Suite Proxy Error" src="../../images/Burp_Proxy_Error.png" /></p>
+<p>I checked out the Pinned.apk using jadx and found the same URL:</p>
+<p><img alt="JADX-GUI" src="../../images/jadx-gui.png" /></p>
+<p>It took me a bit in jadx-gui to line up that <code>w()</code> was the certificate it was loading <code>onClick</code>. Since Burp Suite didn't have this certificate, it caused a proxy error.</p>
+<p>I had heard of certificate pinning and bypassing cert pinning so off to bing I went. I came across frida and cert bypassing. Having never used frida, I needed to get that up and going.</p>
+<h3 id="frida">Frida:</h3>
+<p>Here we can start leveraging Frida's Android tutorial:</p>
+<p><a href="https://frida.re/docs/android/">Frida - Android Tutorial</a></p>
+<p>Grab the latest <code>frida-server</code> in the architecture of your Android device:</p>
+<p><a href="https://github.com/frida/frida/releases">Frida - Releases</a></p>
+<ul>
+<li>For mine, I happened to use <code>frida-server-X.X.X-android-x86_64.xz</code></li>
+</ul>
+<p>Unpackage the frida-server:</p>
+<ul>
+<li><code>unxz frida-server-X.X.X-android-x86_64.xz</code></li>
+</ul>
+<p>Connect to the Android Device, from Kali:</p>
+<ul>
+<li><code>adb connect &lt;IP&gt;</code></li>
+<li><code>adb root</code> - this might be required, so I ran it</li>
+<li><code>adb push frida-server /data/local/tmp/</code></li>
+<li><code>adb shell "chmod 755 /data/local/tmp/frida-server"</code></li>
+<li><code>adb shell "/data/local/tmp/frida-server &amp;"</code></li>
+</ul>
+<p>Getting the running processes/apps:</p>
+<ul>
+<li><code>frida-ps -U</code></li>
+</ul>
+<p>I tried another script and didn't have any success. I found this script in my searching:</p>
+<p><a href="https://codeshare.frida.re/@masbog/frida-android-unpinning-ssl/">Frida - masbog</a></p>
+<p>Once I created the js file, I ran the following command:</p>
+<p><code>frida -U -f com.example.pinned -l hooked.js</code></p>
+<ul>
+<li><code>com.example.pinned</code> - this comes from the Identifer from running <code>frida-ps -U</code></li>
+</ul>
+<p>At this point we should be able to test hitting the login button on the Pinned application and see the request show up in the HTTP history. The flag is in the POST request body (not shown).</p>
+<p><img alt="Flag in Request" src="../../images/Flag.png" /></p>
+<p>If you are just dipping your toe in the world of mobile challenges, give this a go and get that flag. It's one thing to read about it. It's another to do it.</p>
+
+
+</section>
+
+</div> <!-- end of page-inner -->
+</div> <!-- end of page-wrapper -->
+
+</div> <!-- end of body-inner -->
+
+</div> <!-- end of book-body -->
+<script src="../../js/main.js"></script>
+<script src="../../js/gitbook.min.js"></script>
+<script src="../../js/theme.min.js"></script>
+</body>
+</html>
