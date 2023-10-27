@@ -120,8 +120,8 @@ Frida - Installation:</li>
 <p>Finally, I recommend setting the network settings of both the Kali VM and the Android VM to the Bridged Adapter. This way, I could run Burp Suite on the Kali VM and use <code>adb</code> to connect to the Android VM IP address later.</p>
 <h3 id="putting-things-in-motion">Putting things in motion:</h3>
 <p>I installed the Pinned.apk via <code>adb</code>:
-- <code>adb connect &lt;ip&gt;</code>
-- <code>adb install ./pinned.apk</code></p>
+<li><code>adb connect &lt;ip&gt;</code></li>
+<li><code>adb install ./pinned.apk</code></p></li>
 <p>I opened the application and found a login page:</p>
 <p><img alt="Pinnned Login" src="../../images/Pinned_Login.png" /></p>
 <p>From there, I set up Burp Suite Communicty on the Kali VM to capture the traffic from the Android VM. I hit the login button on the Pinned application. The only change in the UI was a message below the button of "You are logged in."</p>
